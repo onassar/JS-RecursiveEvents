@@ -42,27 +42,34 @@ sample.launch('custom.click', ['Fruit!']);
 
 ### Output
 
-    round 1: bananas
-    fn
     round 1: apples
-    round 2: bananas
-    Fruit!
+    round 1: bananas
     fn
     round 2: apples
     Fruit!
+    round 2: bananas
+    Fruit!
+    fn
 
 There are a few things to note here:  
-The console logs *seem* reversed, but because events are being launched
-recursively, the last event bound is always the first to be called.
+The ordering of console logs are sequential. Originally I had had them reverse,
+and then thought "Hey! That doesn't make any sense!". They're called and
+launched in the order that they're added, with the follow stack positions' event
+passed as the callback argument.
 
-Also, the scope of `this`. It'll always be the object that the event is being
-called against. In this case, the `RecursiveEvents` object.
+Also, the scope of `this`: it'll always be the instance that the event is being
+called against. In this case, the `obj` `RecursiveEvents` instance.
 
 You may have noticed that the event-bindings aren't reserved to
 classical-semantics. That is, `click` or `hover` or whatnot. It's just a string
 that is used for referencing, so it can be anything. I find this helpful for
 binding events to objects that don't behave in the semantic world around mouse
 or keyboard interactions.
+
+A great example for me is
+[Twitter Boostrap's](http://twitter.github.com/bootstrap/) Accordion/Collapse
+plugin. I wanted to bind events like `collapse` to it, and should have the right
+to :P
 
 Finally, the `data` and `callback` parameters. The `callback` parameter will
 always be the last passed into a callback. If no data is passed into the

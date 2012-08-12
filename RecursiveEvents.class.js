@@ -14,8 +14,8 @@ if (typeof klass !== 'function') {
  * binding to be performed recursively.
  * 
  * That is, each call against an event (eg. this.launch('click')), will pass
- * along a callback function to be run, in the reverse order that they were
- * bound using the <attach> method.
+ * along a callback function to be run, in the order that they were bound using
+ * the <attach> method.
  * 
  * This allows for a more robust event-handling flow, whereby callbacks can
  * continue up the chain.
@@ -83,7 +83,7 @@ var RecursiveEvents = klass({
      */
     attach: function(bind, fn) {
         if (this._events[bind]) {
-            this._events[bind].callbacks.unshift(fn);
+            this._events[bind].callbacks.push(fn);
         }
         else {
             this._events[bind] = {
@@ -170,7 +170,7 @@ var RecursiveEvents = klass({
             if (this._events[bind].stack.length > 0) {
     
                 /**
-                 * Set the scope for function-calling; get the latest callback
+                 * Set the scope for function-calling; get the oldest-callback
                  * function; redefine the data incase none was passed in
                  */
                 var self = this,
