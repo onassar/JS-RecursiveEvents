@@ -101,11 +101,17 @@ var RecursiveEvents = klass({
      * 
      * Worth noting is that if the <launch> method is called with a binding that
      * hadn't been attached to the object (eg. having attached a <click>
-     * binding, but then attempting to launch a <clickk> binding), it will by
-     * default throw an error.
+     * binding, but then attempting to launch a <clickk> binding), it will, by
+     * default, throw an error.
      * 
      * To have it fail silently, do so through the constructor method
      * <initialize>.
+     * 
+     * I chose the default behaviour to be throwing an error, rather than
+     * failing silently, since for me, I want to know when I'm making calls to
+     * launch bindings that were never attached. I think it's indicative of
+     * other issues that may be at hand when I'm making <launch> calls under
+     * the presumption that they were added.
      * 
      * @public
      * @param  String bind
