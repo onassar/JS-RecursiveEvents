@@ -6,6 +6,11 @@ Instantiable class based on [Dustin Diaz'](http://dustindiaz.com/)
 recursive-event-bindings.  
 See the [klass library on GitHub](https://github.com/ded/klass) as well.
 
+Note: ought to work with [John Resig's](http://ejohn.org/)
+[Simple javascript inheritance](http://ejohn.org/blog/simple-javascript-inheritance/)
+class. Simply change the first line of `RecursiveEvents.class.js` from
+`var RecursiveEvents = klass({` to `var RecursiveEvents = Class.extend({`.
+
 ### Usage
 
 ``` javascript
