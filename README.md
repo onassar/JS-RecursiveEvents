@@ -6,6 +6,14 @@ Instantiable class based on [Dustin Diaz'](http://dustindiaz.com/)
 recursive-event-bindings.  
 See the [klass library on GitHub](https://github.com/ded/klass) as well.
 
+The goal of this was to create a simply library or script that allowed for
+event listeners to be bound to a variable string (eg. click, hover, submit,
+collapse), but be called recursively.
+
+That is to say, each call to add an event listener or bind one would pass along
+a callback function of the subsequent listener in the stack, controlling the
+order in which their called.
+
 Note: ought to work with [John Resig's](http://ejohn.org/)
 [Simple javascript inheritance](http://ejohn.org/blog/simple-javascript-inheritance/)
 class. Simply change the first line of `RecursiveEvents.class.js` from
