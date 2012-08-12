@@ -6,37 +6,39 @@ recursive-event-bindings.
 
 ### Usage
 
-    // instantiate
-    var sample = (new RecursiveEvents());
+``` javascript
+// instantiate
+var sample = (new RecursiveEvents());
 
-    // click event bindings
-    sample.attach('click', function(callback) {
-        console.log('round 1: apples');
-        callback();
-    });
-    sample.attach('click', function(callback) {
-        console.log('round 1: bananas');
-        console.log(this);
-        callback();
-    });
-    sample.launch('click');
+// click event bindings
+sample.attach('click', function(callback) {
+    console.log('round 1: apples');
+    callback();
+});
+sample.attach('click', function(callback) {
+    console.log('round 1: bananas');
+    console.log(this);
+    callback();
+});
+sample.launch('click');
 
-    // instantiate
-    sample = (new RecursiveEvents());
+// instantiate
+sample = (new RecursiveEvents());
 
-    // sample with data passed in
-    sample.attach('custom.click', function(data, callback) {
-        console.log('round 2: apples');
-        console.log(data);
-        callback();
-    });
-    sample.attach('custom.click', function(data, callback) {
-        console.log('round 2: bananas');
-        console.log(data);
-        console.log(this);
-        callback();
-    });
-    sample.launch('custom.click', ['Fruit!']);
+// sample with data passed in
+sample.attach('custom.click', function(data, callback) {
+    console.log('round 2: apples');
+    console.log(data);
+    callback();
+});
+sample.attach('custom.click', function(data, callback) {
+    console.log('round 2: bananas');
+    console.log(data);
+    console.log(this);
+    callback();
+});
+sample.launch('custom.click', ['Fruit!']);
+```
 
 ### Output
 
