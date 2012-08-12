@@ -3,8 +3,7 @@ JS-RecursiveEvents
 
 Instantiable class based on [Dustin Diaz'](http://dustindiaz.com/)
 [klass](http://www.dustindiaz.com/klass/) module, which provides
-recursive-event-bindings.
-
+recursive-event-bindings.  
 See the [klass library on GitHub](https://github.com/ded/klass) as well.
 
 ### Usage
