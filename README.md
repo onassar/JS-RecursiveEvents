@@ -1,7 +1,8 @@
 JS-RecursiveEvents
 ==================
 
-Instantiable class based on Dustin Diaz' &lt;klass&gt; module, which provides
+Instantiable class based on [Dustin Diaz'](http://dustindiaz.com/)
+[&lt;klass&gt;](http://www.dustindiaz.com/klass/) module, which provides
 recursive-event-bindings.
 
 ### Usage
