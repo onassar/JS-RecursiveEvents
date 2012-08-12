@@ -54,8 +54,8 @@ sample.launch('custom.click', ['Fruit!']);
 There are a few things to note here:  
 The ordering of console logs are sequential. Originally I had had them reverse,
 and then thought "Hey! That doesn't make any sense!". They're called and
-launched in the order that they're added, with the follow stack positions' event
-passed as the callback argument.
+launched in the order that they're added, with the following stack-positions'
+callback passed as the callback argument.
 
 Also, the scope of `this`: it'll always be the instance that the event is being
 called against. In this case, the `obj` `RecursiveEvents` instance.
