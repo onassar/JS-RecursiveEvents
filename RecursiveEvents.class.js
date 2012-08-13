@@ -22,6 +22,8 @@ if (typeof klass !== 'function') {
  * 
  * @todo   Think about adding in an optional parameter to the <launch> method
  *         which will have stack be called in reverse-order.
+ * @note   Private (double-underscore) variables are used to minimize
+ *         possibility of namespace-conflicts
  * @see    <https://github.com/ded/klass>
  * @see    <http://dustindiaz.com/klass>
  * @author Oliver Nassar <onassar@gmail.com>
@@ -30,7 +32,7 @@ if (typeof klass !== 'function') {
 var RecursiveEvents = klass({
 
     /**
-     * _events
+     * __events
      * 
      * Stores binding-keys (eg. click, submit) for recursive events, along with
      * their respective callbacks.
@@ -40,25 +42,29 @@ var RecursiveEvents = klass({
      * @protected
      * @param     Object
      */
-    _events: {},
+    __events: {},
 
     /**
-     * _strict
+     * __strict
      * 
      * @protected
      * @param     Boolean (default: true)
      */
-    _strict: true,
+    __strict: true,
 
     /**
      * init
+     * 
+     * Because of how the <klass> library works, the constructor needs to be
+     * call in order to reset the <__events> object.
      * 
      * @public
      * @param  Boolean strict
      * @return void
      */
     initialize: function(strict) {
-        this._strict = strict === undefined ? this._strict : strict;
+        this.__strict = strict === undefined ? this.__strict : strict;
+        this.__events = {};
     },
 
     /**
@@ -78,21 +84,24 @@ var RecursiveEvents = klass({
      * run obj.launch('submit'). This is only possible when the executing-stack
      * is stored relative to the binding-type.
      * 
+     * Returns <this> to allow for chaining events-bindings.
+     * 
      * @public
      * @param  String bind
      * @param  Function fn
-     * @return void
+     * @return Fn
      */
     attach: function(bind, fn) {
-        if (this._events[bind]) {
-            this._events[bind].callbacks.push(fn);
+        if (this.__events[bind]) {
+            this.__events[bind].callbacks.push(fn);
         }
         else {
-            this._events[bind] = {
+            this.__events[bind] = {
                 stack: [],
                 callbacks: [fn]
             };
         }
+        return this;
     },
 
     /**
@@ -133,7 +142,7 @@ var RecursiveEvents = klass({
          * 
          * I do something curious below; I do a check to see if any events are
          * bound to the binding <bind>. If there aren't, I either throw an
-         * error, or fail silently, depending on the <_strict> boolean defined
+         * error, or fail silently, depending on the <__strict> boolean defined
          * on the instance. That's not the curious part.
          * 
          * The curious part is that I could have simply thrown a <return>
@@ -152,10 +161,10 @@ var RecursiveEvents = klass({
         if (clone === undefined) {
 
             // no events are bound to this binding
-            if (this._events[bind] === undefined) {
+            if (this.__events[bind] === undefined) {
 
                 // if it's a strict instantiation
-                if (this._strict === true) {
+                if (this.__strict === true) {
                     throw new Error(
                         'Binding <' + bind + '> isn\'t valid within the ' +
                         'context of this object'
@@ -167,7 +176,7 @@ var RecursiveEvents = klass({
             } else {
 
                 // make the clone
-                this._events[bind].stack = this._events[bind].callbacks.slice() || [];
+                this.__events[bind].stack = this.__events[bind].callbacks.slice() || [];
             }
         }
 
@@ -175,14 +184,14 @@ var RecursiveEvents = klass({
         if (empty === false) {
 
             // events left in this binding's call-stack
-            if (this._events[bind].stack.length > 0) {
+            if (this.__events[bind].stack.length > 0) {
     
                 /**
                  * Set the scope for function-calling; get the oldest-callback
                  * function; redefine the data incase none was passed in
                  */
                 var self = this,
-                    fn = this._events[bind].stack.shift(),
+                    fn = this.__events[bind].stack.shift(),
                     data = data || [];
     
                 /**
@@ -201,7 +210,7 @@ var RecursiveEvents = klass({
                 data = Array.prototype.slice.call(data);
     
                 // include the callback as the last argument passed to the function
-                if (this._events[bind].stack.length > 0) {
+                if (this.__events[bind].stack.length > 0) {
                     data.push(function() {
                         self.launch(bind, data, false);
                     });
