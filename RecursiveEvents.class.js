@@ -1,3 +1,4 @@
+
 // <klass> dependency
 if (typeof klass !== 'function') {
     throw new Error(
