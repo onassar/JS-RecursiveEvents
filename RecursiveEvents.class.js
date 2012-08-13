@@ -1,4 +1,3 @@
-
 // <klass> dependency
 if (typeof klass !== 'function') {
     throw new Error(
@@ -92,15 +91,13 @@ var RecursiveEvents = klass({
      * @return Fn
      */
     attach: function(bind, fn) {
-        if (this.__events[bind]) {
-            this.__events[bind].callbacks.push(fn);
-        }
-        else {
+        if (!this.__events[bind]) {
             this.__events[bind] = {
                 stack: [],
-                callbacks: [fn]
+                callbacks: []
             };
         }
+        this.__events[bind].callbacks.push(fn);
         return this;
     },
 
