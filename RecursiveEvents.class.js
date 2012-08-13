@@ -20,6 +20,8 @@ if (typeof klass !== 'function') {
  * This allows for a more robust event-handling flow, whereby callbacks can
  * continue up the chain.
  * 
+ * @todo   Think about adding in an optional parameter to the <launch> method
+ *         which will have stack be called in reverse-order.
  * @see    <https://github.com/ded/klass>
  * @see    <http://dustindiaz.com/klass>
  * @author Oliver Nassar <onassar@gmail.com>
@@ -182,6 +184,21 @@ var RecursiveEvents = klass({
                 var self = this,
                     fn = this._events[bind].stack.shift(),
                     data = data || [];
+    
+                /**
+                 * There is a bug when the data passed into this <launch> method
+                 * is the special <arguments> object, which behaves like an
+                 * array.
+                 * 
+                 * While it behaves like an array, it doesn't contain
+                 * array-native methods, and fails upon trying to use them. The
+                 * following is a way to get around this by ensuring that the
+                 * <data> variable passed in has the neccessary methods
+                 * available for the rest of the logi.
+                 * 
+                 * @see <https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Functions_and_function_scope/arguments>
+                 */
+                data = Array.prototype.slice.call(data);
     
                 // include the callback as the last argument passed to the function
                 if (this._events[bind].stack.length > 0) {
