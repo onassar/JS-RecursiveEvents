@@ -20,6 +20,7 @@ if (typeof klass !== 'function') {
  * This allows for a more robust event-handling flow, whereby callbacks can
  * continue up the chain.
  * 
+ * @todo   Prototype <Object> to have all inherit
  * @todo   Think about adding in an optional parameter to the <launch> method
  *         which will have stack be called in reverse-order.
  * @note   Private (double-underscore) variables are used to minimize
@@ -176,6 +177,14 @@ var RecursiveEvents = klass({
                 // make the clone
                 this.__events[bind].stack = this.__events[bind].callbacks.slice() || [];
             }
+
+            /**
+             * Since this is the block whereby a binding is being "launched",
+             * define the data incase none was passed in, and push a <null>
+             * value that will act as a placeholder for callbacks.
+             */
+            data = data || [];
+            data.push(null);
         }
 
         // if there are events bound for this binding
@@ -186,12 +195,11 @@ var RecursiveEvents = klass({
     
                 /**
                  * Set the scope for function-calling; get the oldest-callback
-                 * function; redefine the data incase none was passed in
+                 * function
                  */
                 var self = this,
-                    fn = this.__events[bind].stack.shift(),
-                    data = data || [];
-    
+                    fn = this.__events[bind].stack.shift();
+
                 /**
                  * There is a bug when the data passed into this <launch> method
                  * is the special <arguments> object, which behaves like an
@@ -201,22 +209,32 @@ var RecursiveEvents = klass({
                  * array-native methods, and fails upon trying to use them. The
                  * following is a way to get around this by ensuring that the
                  * <data> variable passed in has the neccessary methods
-                 * available for the rest of the logi.
+                 * available for the rest of the logic.
+                 * 
+                 * Since calling <slice> upon an array clones it, it shoudl be
+                 * checked whether an array-native method is available (eg.
+                 * <shift>), and only done in that one case.
+                 * 
+                 * While there isn't a big deal cloning it, it's probably not
+                 * ideal from a performance point-of-view.
                  * 
                  * @see <https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Functions_and_function_scope/arguments>
                  */
-                data = Array.prototype.slice.call(data);
-    
-                // include the callback as the last argument passed to the function
+                if (!data.shift) {
+                    data = Array.prototype.slice.call(data);
+                }
+
+                // if found, callback recursively calls next in stack
+                var callback = function() {};
                 if (this.__events[bind].stack.length > 0) {
-                    data.push(function() {
+                    var callback = function() {
                         self.launch(bind, data, false);
-                    });
+                    };
                 }
-                // oterhwise, there are no more callbacks
-                else {
-                    data.push(function() {});
-                }
+
+                // push as *last* parameter
+                var last = data.length - 1;
+                data[last] = callback;
                 
                 /**
                  * Set the scope to be <this>, a reference to this instantiation,
