@@ -104,6 +104,18 @@ var RecursiveEvents = klass({
     },
 
     /**
+     * clear
+     * 
+     * @public
+     * @param  String bind
+     * @return void
+     */
+    clear: function(bind) {
+        this.__events[bind].callbacks = [];
+        this.__events[bind].stacks = [];
+    },
+
+    /**
      * launch
      * 
      * Recursively calls the callbacks for the <bind> binding, passing along any
